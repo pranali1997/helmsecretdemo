@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "secondhelmsecretdemo.fullname" . }}
+  labels:
+    {{- include "secondhelmsecretdemo.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "secondhelmsecretdemo.selectorLabels" . | nindent 4 }}

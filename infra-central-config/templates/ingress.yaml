@@ -1,0 +1,32 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "centralconfig.fullname" . -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $paths := .Values.ingress.paths -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "centralconfig.fullname" . }}
+  labels: {{ include "centralconfig.labels" . | nindent 4 }}
+  {{- range $key, $value := .Values.ingress.labels }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+      - host: {{ . }}
+        http:
+          paths:
+            - path: {{ $paths }}
+              backend:
+                serviceName: {{ $fullName }}
+                servicePort: {{ $servicePort }}
+  {{- end }}
+{{- end }}

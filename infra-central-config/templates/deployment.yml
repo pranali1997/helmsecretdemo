@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "centralconfig.fullname" . }}
+  labels:
+    {{- include "centralconfig.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "centralconfig.selectorLabels" . | nindent 6 }}
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "centralconfig.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{ toYaml .Values.containerEnv | nindent 12 }}
+            - name: infra-central-config-secrets
+              valueFrom:
+                secretKeyRef:
+                  name: event-secret
+                  key: spring_security_user_password
+          envFrom:
+            - configMapRef:
+                name: {{ include "centralconfig.fullname" . }}-configmap
+            - secretRef:
+                name: {{ include "centralconfig.fullname" . }}-secrets
+          ports:
+            - containerPort: 8888
+              name: csport
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config/paymentservice-dev.yml
+              readOnly: true
+              subPath: paymentservice-dev.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            defaultMode: 0600
+            name: {{ include "centralconfig.fullname" . }}-configs
+
+#      imagePullSecrets:
+#      - name: dockerregistry-secrets
