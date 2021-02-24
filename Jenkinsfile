@@ -39,6 +39,8 @@ spec:
         PUBLIC_KEY=credentials('gpg_public_key')
         PRIVATE_KEY=credentials('gpg_private_key')
         GPG_PASSPHRASE=credentials('gpg_passphrase')
+        KUBECONFIG  = credentials('kubernetes-central')
+
     }
     stages {
         stage('Main') {
@@ -56,7 +58,7 @@ spec:
                     sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                     sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
-                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml'
+                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml --kubeconfig=${KUBECONFIG}'
                 }
             }
         }
