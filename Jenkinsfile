@@ -58,7 +58,7 @@ spec:
                     sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                     sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
-                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml --kubeconfig=${KUBECONFIG}'
+                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml -n infra --kubeconfig=${KUBECONFIG}'
                 }
             }
         }
