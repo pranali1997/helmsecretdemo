@@ -28,7 +28,7 @@ spec:
     args:
     - infinity
   - name: gitsecretcontainer
-    image: sobolevn/git-secret
+    image: ncpierson/git-secret
     command:
     - sleep
     args:
@@ -59,9 +59,6 @@ spec:
                 container('helmcontainer'){
                     sh 'helm version'
                     sh 'gpg --version'
-                    sh 'gpg --batch --import ${PRIVATE_KEY}'
-                    sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
-                    sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
                 }
             }
@@ -69,6 +66,10 @@ spec:
         stage ('check password') {
             steps {
                 container('gitsecretcontainer'){
+                sh 'gpg --version'
+                sh 'gpg --batch --import ${PRIVATE_KEY}'
+                sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
+                sh 'gpg --list-keys'
                 sh '''
                     git secret reveal -p ${GPG_PASSPHRASE}
                     git secret cat bankservice/.env
