@@ -53,9 +53,8 @@ spec:
                 container('helmcontainer'){
                     sh 'helm version'
                     sh 'gpg --version'
-                    sh 'export GPG_TTY=$(tty)'
-                    sh 'gpg --batch --import $gpg_secret'
-                    sh 'gpg --import-ownertrust $gpg_trust'
+                    sh 'gpg --batch --import ${PRIVATE_KEY}'
+                    sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
                     sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
                 }
@@ -66,7 +65,7 @@ spec:
                 container('helmcontainer'){
                 sh '''
                     cd helm-secret-demo
-                    git secret reveal -p '$gpg_passphrase'
+                    git secret reveal -p ${GPG_PASSPHRASE}
                     git secret cat bankservice/.env
                 '''
                 }
