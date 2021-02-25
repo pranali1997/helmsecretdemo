@@ -27,6 +27,12 @@ spec:
     - sleep
     args:
     - infinity
+  - name: gitsecretContainer
+    image: sobolevn/git-secret
+    command:
+    - sleep
+    args:
+    - infinity
 '''
             // Can also wrap individual steps:
             // container('shell') {
@@ -62,7 +68,7 @@ spec:
         }
         stage ('check password') {
             steps {
-                container('helmcontainer'){
+                container('gitsecretContainer'){
                 sh '''
                     git secret reveal -p ${GPG_PASSPHRASE}
                     git secret cat bankservice/.env
