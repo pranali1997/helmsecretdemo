@@ -38,7 +38,7 @@ spec:
     environment{
         PUBLIC_KEY=credentials('gpg-ownertrust')
         PRIVATE_KEY=credentials('gpg-secret')
-        GPG_PASSPHRASE=credentials('gpg_passphrase')
+        GPG_PASSPHRASE=credentials('gpg-passphrase')
         KUBECONFIG  = credentials('kubernetes-central')
 
     }
