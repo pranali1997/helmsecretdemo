@@ -28,7 +28,7 @@ spec:
     args:
     - infinity
   - name: gitsecretcontainer
-    image: ncpierson/git-secret
+    image: izhar0407/git-secrets
     command:
     - sleep
     args:
