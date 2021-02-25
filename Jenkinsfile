@@ -64,7 +64,6 @@ spec:
             steps {
                 container('helmcontainer'){
                 sh '''
-                    cd helm-secret-demo
                     git secret reveal -p ${GPG_PASSPHRASE}
                     git secret cat bankservice/.env
                 '''
