@@ -76,5 +76,14 @@ spec:
                 }
             }
         }
+        stage('run') {
+            steps {
+                container('helmcontainer'){
+                    sh 'helm version'
+                    sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
+                    sh 'helm install bankdemo bankservice'
+                }
+            }
+        }
     }
 }
