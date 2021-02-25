@@ -101,12 +101,13 @@ config:
   SPRING_PROFILES_ACTIVE: dev
   SPRING_DATASOURCE_URL: "jdbc:postgresql://postgresql.infra.svc.cluster.local:5432/bank_db_java"
   SPRING_DATASOURCE_USERNAME: "bank_user_java"
+  SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
 
 secrets: {}
 
-containerEnv:
-  - name: SPRING_DATASOURCE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: servive-dep-bankservice-secrets
-        key: SPRING_DATASOURCE_PASSWORD
+containerEnv: []
+#  - name: SPRING_DATASOURCE_PASSWORD
+#    valueFrom:
+#      secretKeyRef:
+#        name: servive-dep-bankservice-secrets
+#        key: SPRING_DATASOURCE_PASSWORD
