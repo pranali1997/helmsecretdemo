@@ -61,7 +61,7 @@ spec:
                 }
             }
         }
-        stage (check password) {
+        stage ('check password') {
             steps {
                 container('helmcontainer'){
                 sh '''
