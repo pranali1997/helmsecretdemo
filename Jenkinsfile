@@ -36,8 +36,8 @@ spec:
         }
     }
     environment{
-        PUBLIC_KEY=credentials('gpg_public_key')
-        PRIVATE_KEY=credentials('gpg_private_key')
+        PUBLIC_KEY=credentials('gpg-ownertrust')
+        PRIVATE_KEY=credentials('gpg-secret')
         GPG_PASSPHRASE=credentials('gpg_passphrase')
         KUBECONFIG  = credentials('kubernetes-central')
 
@@ -54,11 +54,21 @@ spec:
                     sh 'helm version'
                     sh 'gpg --version'
                     sh 'export GPG_TTY=$(tty)'
-                    sh 'gpg --import ${PUBLIC_KEY}'
-                    sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
+                    sh 'gpg --batch --import $gpg_secret'
+                    sh 'gpg --import-ownertrust $gpg_trust'
                     sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
-                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml -n infra --kubeconfig=${KUBECONFIG}'
+                }
+            }
+        }
+        stage (check password) {
+            steps {
+                container('helmcontainer'){
+                sh '''
+                    cd helm-secret-demo
+                    git secret reveal -p '$gpg_passphrase'
+                    git secret cat bankservice/.env
+                '''
                 }
             }
         }

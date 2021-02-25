@@ -1,5 +1,8 @@
 .idea
 .gitsecret/keys/random_seed
 !*.secret
-infra-central-config/dbpassword.txt
-bankservice/.env
+dbpassword.txt
+.env
+.
+gpg-ownertrust.txt
+gpg-secret.key
