@@ -61,7 +61,6 @@ spec:
                   sh 'gpg --batch --import ${PRIVATE_KEY}'
                   sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
                   sh 'gpg --list-keys'
-                  sh 'git secrets init'
                   sh 'git secret reveal -p ${GPG_PASSPHRASE}'
                   sh 'git secret cat postgresqlhelmsecret/secrets.yaml'
                 }
