@@ -58,8 +58,8 @@ spec:
             steps {
                 container('gitsecretcontainer'){
                   sh 'gpg --version'
-                  sh 'gpg --import ${PUBLIC_KEY}'
-                  sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
+                  sh 'gpg --batch --import ${PRIVATE_KEY}'
+                  sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
                   sh 'gpg --list-keys'
                   sh 'git secrets init'
                   sh 'git secret reveal -p ${GPG_PASSPHRASE}'
