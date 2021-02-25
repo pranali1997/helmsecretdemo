@@ -56,25 +56,15 @@ spec:
         }
         stage('helm') {
             steps {
-                container('helmcontainer'){
-                  sh 'helm version'
+                container('gitsecretcontainer'){
                   sh 'gpg --version'
                   sh 'export GPG_TTY=$(tty)'
                   sh 'gpg --import ${PUBLIC_KEY}'
                   sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                   sh 'gpg --list-keys'
-                  sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
-                }
-            }
-        }
-        stage ('check password') {
-            steps {
-                container('gitsecretcontainer'){
-                    sh '''
-                        git secrets init
-                        git secret reveal -p ${GPG_PASSPHRASE}
-                        git secret cat postgresqlhelmsecret/secrets.yaml
-                    '''
+                  sh 'git secrets init'
+                  sh 'git secret reveal -p ${GPG_PASSPHRASE}'
+                  sh 'git secret cat postgresqlhelmsecret/secrets.yaml'
                 }
             }
         }
@@ -82,7 +72,6 @@ spec:
             steps {
                 container('helmcontainer'){
                     sh 'helm version'
-//                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
                     sh 'helm install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml -n infra --kubeconfig=${KUBECONFIG}'
                 }
             }
