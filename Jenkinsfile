@@ -27,7 +27,7 @@ spec:
     - sleep
     args:
     - infinity
-  - name: gitsecretContainer
+  - name: gitsecretcontainer
     image: sobolevn/git-secret
     command:
     - sleep
@@ -68,7 +68,7 @@ spec:
         }
         stage ('check password') {
             steps {
-                container('gitsecretContainer'){
+                container('gitsecretcontainer'){
                 sh '''
                     git secret reveal -p ${GPG_PASSPHRASE}
                     git secret cat bankservice/.env
