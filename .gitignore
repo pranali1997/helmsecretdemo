@@ -2,3 +2,6 @@
 !*.secret
 infra-central-config/dbpassword.txt
 bankservice/.env
+bankservice/secrets.yaml
+postgresqlhelmsecret/secrets.yaml
+.idea
