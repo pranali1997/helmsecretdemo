@@ -93,10 +93,11 @@ environments:
   SERVER_PORT: "8888"
   SPRING_PROFILES_ACTIVE: native
   spring_security_user_name: admin
+  spring_security_user_password: ${PASSWORD}
 secrets: {}
-containerEnv:
-  - name: spring_security_user_password
-    valueFrom:
-      secretKeyRef:
-        name: infra-central-config-secrets
-        key: spring_security_user_password
+containerEnv: []
+#  - name: spring_security_user_password
+#    valueFrom:
+#      secretKeyRef:
+#        name: infra-central-config-secrets
+#        key: spring_security_user_password

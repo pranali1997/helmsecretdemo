@@ -1,0 +1,4 @@
+
+creation_rules:
+  # encrypted using helm-secrets-example-projectx <helm-secrets-projectx@example.com>
+  - pgp: "9C18C10D522BC91A1EDECFFE4B75E5CDF2856192"
