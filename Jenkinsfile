@@ -58,7 +58,6 @@ spec:
             steps {
                 container('gitsecretcontainer'){
                   sh 'gpg --version'
-                  sh 'export GPG_TTY=$(tty)'
                   sh 'gpg --import ${PUBLIC_KEY}'
                   sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                   sh 'gpg --list-keys'
