@@ -1,4 +1,3 @@
-// Uses Declarative syntax to run commands inside a container.
 pipeline {
     agent {
         kubernetes {
@@ -27,12 +26,6 @@ spec:
     - sleep
     args:
     - infinity
-  - name: gitsecretcontainer
-    image: izhar0407/git-secrets
-    command:
-    - sleep
-    args:
-    - infinity
 '''
             // Can also wrap individual steps:
             // container('shell') {
@@ -42,9 +35,9 @@ spec:
         }
     }
     environment{
-        PUBLIC_KEY=credentials('gpg-ownertrust')
-        PRIVATE_KEY=credentials('gpg-secret')
-        GPG_PASSPHRASE=credentials('gpg-passphrase')
+        PUBLIC_KEY=credentials('gpg_public_key')
+        PRIVATE_KEY=credentials('gpg_private_key')
+        GPG_PASSPHRASE=credentials('gpg_passphrase')
         KUBECONFIG  = credentials('kubernetes-central')
 
     }
@@ -56,23 +49,18 @@ spec:
         }
         stage('helm') {
             steps {
-                container('gitsecretcontainer'){
-                  sh 'gpg --version'
-                  sh 'gpg --batch --import ${PRIVATE_KEY}'
-                  sh 'gpg --import-ownertrust ${PUBLIC_KEY}'
-                  sh 'gpg --list-keys'
-                  sh 'git secret reveal -p ${GPG_PASSPHRASE}'
-                  sh 'git secret cat postgresqlhelmsecret/secrets.yaml'
-                }
-            }
-        }
-        stage('run') {
-            steps {
                 container('helmcontainer'){
                     sh 'helm version'
-                    sh 'helm install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml -n infra --kubeconfig=${KUBECONFIG}'
+                    sh 'gpg --version'
+                    sh 'export GPG_TTY=$(tty)'
+                    sh 'gpg --import ${PUBLIC_KEY}'
+                    sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
+                    sh 'gpg --list-keys'
+                    sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
+                    sh 'helm secrets install postgresqldemo postgresqlhelmsecret --values postgresqlhelmsecret/secrets.yaml -n infra --kubeconfig=${KUBECONFIG}'
                 }
             }
         }
     }
 }
+
