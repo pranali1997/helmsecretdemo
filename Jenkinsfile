@@ -39,9 +39,6 @@ spec:
         PRIVATE_KEY=credentials('gpg_private_key')
         GPG_PASSPHRASE=credentials('gpg_passphrase')
         KUBECONFIG  = credentials('kubernetes-central')
-        gpg_secret = credentials("gpg-secret")
-        gpg_trust = credentials("gpg-ownertrust")
-
     }
     stages {
         stage('Main') {
@@ -57,9 +54,7 @@ spec:
                     sh 'export GPG_OPTS="--pinentry-mode loopback"'
                     sh 'export GPG_TTY=$(tty)'
                     sh 'gpg --import ${PUBLIC_KEY}'
-                    sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
-                    sh 'gpg --batch --import ${gpg_secret}'
-                    sh 'gpg --import-ownertrust ${gpg_trust}'
+                    sh 'gpg --batch --pinentry-mode loopback --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                     sh 'gpg --list-keys'
                     sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
                     sh ' helm secrets dec postgresqlhelmsecret/secrets.yaml'
