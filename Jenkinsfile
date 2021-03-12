@@ -54,9 +54,8 @@ spec:
                 container('helmcontainer'){
                     sh 'helm version'
                     sh 'gpg --version'
-                    sh 'echo $(tty)'
-                    sh 'GPG_TTY=/dev/ttys002'
-                    sh 'export GPG_TTY'
+                    sh 'export GPG_OPTS="--pinentry-mode loopback"'
+                    sh 'export GPG_TTY=$(tty)'
                     sh 'gpg --import ${PUBLIC_KEY}'
                     sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY}'
                     sh 'gpg --batch --import ${gpg_secret}'
