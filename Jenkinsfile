@@ -54,8 +54,6 @@ spec:
                     sh 'gpg --version'
                     sh 'GPG_TTY=/dev/ttys002'
                     sh 'export GPG_TTY'
-                    sh 'gpg --export-secret-key -a "pranali@l.com" > private.key'
-                    sh 'gpg --export -a "pranali@l.com" > public.key'
                     sh 'gpg --import public.key'
                     sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import private.key'
                     sh 'gpg --list-keys'
