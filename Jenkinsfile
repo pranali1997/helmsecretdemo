@@ -21,7 +21,7 @@ spec:
     args:
     - infinity
   - name: helmcontainer
-    image: projectwave/helm
+    image: projectwave/helm:awscliv2
     command:
     - sleep
     args:
