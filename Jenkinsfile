@@ -52,6 +52,7 @@ spec:
                 container('helmcontainer'){
                     sh 'helm version'
                     sh 'gpg --version'
+                    sh 'echo $(tty)'
                     sh 'GPG_TTY=/dev/ttys002'
                     sh 'export GPG_TTY'
                     sh 'gpg --import public.key'
