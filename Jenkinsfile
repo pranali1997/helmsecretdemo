@@ -59,7 +59,6 @@ spec:
                         sh 'echo $HOME'
                         sh 'export GPG_OPTS="--pinentry-mode loopback"'
                         sh 'echo ${GPG_OPTS}'
-                        sh 'gpg --batch --passphrase ${GPG_PASSPHRASE} --allow-secret-key-import --import ${PRIVATE_KEY} >~/.gnupg/secring.gpg'
                         sh 'helm plugin install https://github.com/jkroepke/helm-secrets --version v3.5.0'
                         sh ' helm secrets dec postgresqlhelmsecret/secrets.yaml'
                 }
